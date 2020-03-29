@@ -5,11 +5,13 @@ import state_abbreviation
 import street_abbreviation
 from datetime import datetime as dt
 
+file_path = "Patient_Matching_Data.csv"
+
 # read the CSV file
-data = pd.read_csv("Patient_Matching_Data_2.csv")
+data = pd.read_csv(file_path)
 data["CustomID"] = pd.Series(data.index + 1, index = data.index)
 
-originalData = data
+original_data = pd.read_csv(file_path)
 
 def listToString(s):  
     
@@ -151,6 +153,13 @@ def print_groups():
 	for group in groups:
 		print("Group: " + str(group))
 		for person in groups[group]:
-			print("  - "+data.iloc[person-1]["First Name"])
+			print("  - "+ str(data.iloc[person-1]["PatientID"]))
 print(groups)
 print_groups()
+
+def output_file(): 
+	for group in groups:
+		for person in groups[group]:
+			original_data.at[person - 1, "GroupID"] = group
+	original_data.to_csv("output.csv")
+output_file()
